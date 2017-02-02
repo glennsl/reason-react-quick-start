@@ -73,7 +73,8 @@ let items = [
 ];
 
 let isNuts => fun
-| "cashews" | "pecans" => true
+| "cashews"
+| "pecans" => true
 | _ => false;
 
 let nutIcon =
