@@ -5,21 +5,41 @@
 
 __rehydrate is still in stealth mode, getting some polish before the official announcement. Please don't publicize this. In the meantime, come join us in [Discord!](https://discord.gg/reasonml)__
 
+rehydrate is a pretty thin layer of reason/ocaml bindings to React.
+
 The next few sections will gradually introduce you to using rehydrate. We will gradually introduce new concepts and show more complex examples. Once you master these, you should be ready to go!
 
 You can also clone this repo and build the examples yourself, to see the full context and how they transpile to js.
 
-## Prerequisites
+### Prerequisites and additional resources
 
-rehydrate is a library built on React and best used with Reason. You are expected to know the basics of both Reason and React. If you don't feel very confident, we recomend refreshing your knowledge so you can follow along more easily:
+rehydrate is a library built on React and BuckleScript and best used with Reason. You are expected to know the basics of both Reason and React. If you don't feel very confident, we recomend refreshing your knowledge so you can follow along more easily:
 * [An introduction to Reason](https://kennetpostigo.gitbooks.io/an-introduction-to-reason/content/)
 * [React Quick Start](https://facebook.github.io/react/docs/hello-world.html)
 
-## Additional resources:
+You are not expected to know much about BuckleScript for the purpose of this guide alone, other than the fact that it somehow, as if by magic, converts OCaml/Reason code to Javascript. But you will eventually want to refer to the BuckleScript documentation, for configuration of `bsb`, js interop and such. And you'll want to refer to the rehydrate documentation for the gritty details:
+* [BuckleScript User Manual](https://bloomberg.github.io/bucklescript/Manual.html)
 * [rehydrate documentation proper](https://github.com/reasonml/rehydrate/blob/master/documentation.md)
 
-## Installing
+## Getting started
 
+A good place to start is by cloning and setting up `rehydrate-example`:
+
+```sh
+git clone https://github.com/chenglou/rehydrate-example.git
+cd rehydrate-example
+npm install
+npm start
+```
+
+Then in a different terminal do:
+```sh
+npm run build
+```
+
+`npm start` will run the bucklescript build system (`bsb`) in watch mode. `npm run build` runs `webpack` in watch mode, which will pick up the artifacts produced by `bsb` and bundle them together with its dependencies to produce a single javasrcipt file (for each configured target).
+
+The example project has `bsb` configured to watch the `src` folder, and webpack configured to pick up the artifact produced by bsb from `index.re`, and output `index.js` in the `src` folder alongside `index.html`, which can then be used to run it in a web browser. To start with you will most likely want to use the existing configuration with `index.re` as your entrypoint. You can still split your code into multiple source files. As long as they are alongside and used by `index.re` they'll get picked up by `bsb` and `webpack`.
 
 ## Hello world!
 
