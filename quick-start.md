@@ -41,7 +41,7 @@ npm run build
 
 The example project has `bsb` configured to watch the `src` folder, and webpack configured to pick up the artifact produced by bsb from `index.re`, and output `index.js` in the `src` folder alongside `index.html`, which can then be used to run it in a web browser. To start with you will most likely want to use the existing configuration with `index.re` as your entrypoint. You can still split your code into multiple source files. As long as they are alongside and used by `index.re` they'll get picked up by `bsb` and `webpack`.
 
-## Hello world!
+## A small step for... oh, "hello world"
 
 The smallest rehydrate example looks like this:
 
@@ -51,17 +51,17 @@ ReactDOMRe.render
   (ReasonJs.Document.getElementById "root");
 ```
 
-Not too scary is it! This will render a header saying "Hello World" on the page. Let's move on.
+Not too scary is it! This will render a header saying "Hello World" on the page. Ok, thnx, let's move on...
 
 
-## Yep, there's JSX!
+## There's JSX? There's JSX!
 
-Reason has excellent support for JSX syntax, but there are some differences to be aware of:
+Reason has excellent support for the JSX syntax, but there are some differences to be aware of:
 
 
 ### No curly braces around embedded expressions
 
-Reason's JSX does not need curly braces to embed expressions. Though complex expressions need to be surrounded by parentheses. And in Reason most everything is an expression, so there is barely any limit to what you can intermingle in your JSX.
+Reason's JSX does not need curly braces to embed expressions. Though complex expressions need to be surrounded by parentheses. And in Reason most everything is an expression, so there is barely any limit to what you can intermingle in your JSX. Also, you _can_ surround expressions by curly braces if you really want to, you just don't need to. Surrounding something in curly braces anywhere will merely introduce a new lexical scope.
 
 ```reason
 type user = { firstName: string, lastName: string };
@@ -88,15 +88,15 @@ ReactDOMRe.render
 ```
 
 
-### JSX is typechecked too
+### The JSX is typechecked
 
-As in JSX for JavaScript, JSX in Reason is really just syntax sugar for normal Reason code. And because of this your JSX will typechekd too. If you mistype an attribute the typechecker will give you a nudge. As it also will if you pass a `boolean` to an attribute that expects a `string`.
+As with teh babel JSX  transform for JavaScript, Reason's JSX is really just syntax sugar for plain Reason code. And because of this your JSX will typechekd too. If you mistype an attribute the typechecker will give you a nudge, as it also will if you pass a `boolean` to an attribute that expects a `string`.
 
-But this also means `null` and `string`s or even `list`s and `array`s aren't valid types for expressions embedded in JSX. Components expect their children to be React elements. And so because of this we need to wrap these in React elements. Luckily rehydrate provides functions to do exactly that:
+But this also means `null`s and `string`s or even `list`s and `array`s aren't valid types for expressions embedded in JSX. Components expect their children to be React elements, and so we need to wrap them as elements. Luckily rehydrate provides functions to do exactly that:
 
 * `ReactRe.stringToElement` will wrap a string
 * `ReactRe.arrayToElement` will wrap an array of React elements
-* `ReactRe.nullElement` doesn't wrap anything, but will behave like a null in React.js
+* `ReactRe.nullElement` will pretend to be an element for the typechecker, but is really just a null
 
 ```reason
 let items = [
@@ -132,7 +132,7 @@ ReactDOMRe.render
 
 ## Components
 
-Components require that we dabble a bit in the black arts. But not too much. A basic component looks like this
+Components require that we dabble a bit in the black arts. But just a little bit. A basic component looks like this
 
 ```reason
 module Welcome = {
@@ -152,9 +152,12 @@ let createElement ::name ::children =>
   wrapProps { name } ::children;
 ```
 
-So we define a module, which is really just a specification. `include ReactRe.Component` is the bit of black magic that tells rehydrate what kind of component it is, and what it should expect to see defined in it. `ReactRe.Component` is the most basic kind, and requires us to define a `name` a `props` type, and a `render` function. `name` is the component's display name, which is useful for debugging. `props` specifies the type of the component's attributes/properties. And `render` is, as you'd expect, the function that's called when the component is to be rendered.
+So we define a module, which isn't and won't be the actual component but it's specification. `include ReactRe.Component` is the bit of black magic that tells rehydrate what kind of component it is, and what it should expect to see defined in it. `ReactRe.Component` is the most basic kind, and requires us to define a `name` a type called `props`, and a `render` function.
+* `name` is the component's display name, which is useful for debugging.
+* `props` specifies the type of the component's attributes/properties.
+* `render` is, as you'd expect, the function that's called when the component is to be rendered.
 
-The actual component is defined by the second piece of black magic: `include ReactRe.CreateComponent Welcome`. Under the hood this will create a `comp` variable, which is the actual component and, as we'll learn later, is important for js interop. It will also create a `wrapProps` function, which we then use to define the `createElement` function, which really just translates our properties from a labeled argument form (`::name`) into the form of a record that fits our `props` type.
+The actual component is defined by the second piece of black magic: `include ReactRe.CreateComponent Welcome`. Under the hood this will create a `comp` variable, which is the actual component and, as we'll learn later, is important for js interop. It will also create a `wrapProps` function, which we then use to define the `createElement` function, and which really just translates our properties from a labeled argument form (`::name`) into the form of a record that fits our `props` type.
 
 ### Look, ma, no magic!
 
@@ -167,7 +170,7 @@ module Welcome = {
 };
 ```
 
-This is significanlty less code, and for really small components this is sometimes convenient, but most often you'll want the magical convenience. Both components can be used like this:
+This is significanlty less code, and for tiny components this is sometimes a convenient trick, but most often you'll want all the magical convenience. Both components can be used like this:
 
 ```reason
 ReactDOMRe.render
