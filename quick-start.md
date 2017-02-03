@@ -143,7 +143,7 @@ module Welcome = {
     name: string
   };
 
-  let render {props} =>
+  let render { props } =>
     <h1> (ReactRe.stringToElement ("Hello, " ^ props.name)) </h1>;
 };
 
@@ -158,6 +158,10 @@ So we define a module, which isn't and won't be the actual component but it's sp
 * `render` is, as you'd expect, the function that's called when the component is to be rendered.
 
 The actual component is defined by the second piece of black magic: `include ReactRe.CreateComponent Welcome`. Under the hood this will create a `comp` variable, which is the actual component and, as we'll learn later, is important for js interop. It will also create a `wrapProps` function, which we then use to define the `createElement` function, and which really just translates our properties from a labeled argument form (`::name`) into the form of a record that fits our `props` type.
+
+### The elusive "component bag"
+
+Since idiomatic Reason/OCaml code does not use `this`, rehydrate defines a data structure that's called the "component bag" which fulfills the same role. Which is to avoid having to spcify every damn thing you might want to use, just in case. Therefore many of the functions you define on your components, like the `render` function, will get passed a "component bag". It is a record of the shape `{props, state, updater, refSetter, instanceVars, setState}`, and you'll usually want to destructure the argument directly. If you need access to the state, you just add that like so: `let render { props, state } => ...`
 
 ### Look, ma, no magic!
 
@@ -180,17 +184,93 @@ ReactDOMRe.render
 
 ### Stateful components
 
+With the magic back in, adding local state to a component is as easy telling rehydrate this is a steateful component, what the type of our state is, and what the initial state is:
+
+```reason
+external toLocalTimeString: ReasonJs.Date.t => string = "" [@@bs.send "toLocalTimeString"];
+
+module Clock = {
+  module ClockSpec = {
+    include ReactRe.Component.Stateful;
+    let name = "Clock";
+
+    type props = ();
+    type state = {
+      date: ReasonJs.Date.t
+    };
+
+    let getInitialState props => {
+      date: ReasonJs.Date.make ()
+    };
+
+    let render {state} =>
+      <div>
+        <h1> (ReactRe.stringToElement "Hello, World") </h1>
+        <h2> (ReactRe.stringToElement ("It is " ^ toLocalTimeString state.date)) </h2>
+      </div>
+  };
+
+  include ReactRe.CreateComponent ClockSpec;
+  let createElement ::children =>
+    wrapProps () ::children;
+};
+
+let render () =>
+  ReactDOMRe.render
+    <Clock />
+    (ReasonJs.Document.getElementById "root");
+
+ReasonJs.setInterval render 1000;
+```
+
+Compared to our earlier component, not much fundamental has changed. `include ReactRe.Component` is now `include ReactRe.Component.Stateful`, we've defined a `state` type and a `getInitialState` function which takes `props` as its argument and returns the inital state.
+
+There's not much use in state if it doesn't change, though. So let's get to that.
+
 #### Updating state
 
-### Events
+rehydrate does have a setState function, but you shouldn't normally use it! Instead you'll usually use the `updater` function that's passed to you in the component bag. Let's make a counter, where the count increases on each click of a button.
+
+```reason
+module Counter = {
+  include ReactRe.Component.Stateful;
+  let name = "Counter";
+
+  type props = ();
+  type state = {
+    count: int
+  };
+
+  let getInitialState props => {
+    count: 0
+  };
+
+  let increment {state} _ =>
+    Some { count: state.count + 1 };
+
+  let render {state, updater} =>
+    <div>
+      <h1> (ReactRe.stringToElement ("Current count: " ^ string_of_int state.count)) </h1>
+      <button onClick=(updater increment)>
+        (ReactRe.stringToElement "Click to increment")
+      </button>
+    </div>;
+};
+```
+
+Here we get the `updater` function from the "component bag" passed to our `render` function, which we use to wrap our `increment` function before setting it as the button's `onClick` handler. When the button is clicked, `increment` will be called with the latest state (and whatever else is in the "component bag"). It then returns the new state, which will cause the component to rerender with the new state.
+
+Note that `updater` expects a function that returns `option state`, where returning None avoids the rerender because no state has changed.
 
 ### Lifecycle hooks
+
+### Events
 
 ## Javascript interop
 
 ## Community
 
-[Join us in Discord!](https://discord.gg/reasonml)
+We gather around the bonfire on the reasonml discord. [You should come join us!](https://discord.gg/reasonml)
 
 ## Advanced topics
 
@@ -202,3 +282,10 @@ So why is the middle step even there? I suspect it's in order to decouple the JS
 
 
 ### High-order components and other patterns
+
+## Appendix: Esoteric but useful resources
+
+Much of the BuckleScript and Reason ecosystem is in a state of flux and is therefore only partially documented, or not documented at all! It can therefore be very useful to look at the source code, or interface files if available, to get a better idea of what's available and how it works. Uhmm, Good Luck!
+
+* [ReasonJs source code](https://github.com/BuckleTypes/reason-js/blob/master/src/reasonJs.re)
+* [ReactRe interface source](https://github.com/reasonml/rehydrate/blob/master/src/reactRe.rei)
