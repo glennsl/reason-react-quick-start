@@ -39,7 +39,7 @@ Not too scary is it! This will render a header saying "Hello World" on the page.
 Reason has excellent support for JSX syntax, but there are some differences to be aware of:
 
 
-### No curly braces for embedding expressions in JSX
+### No curly braces around embedded expressions
 
 Reason's JSX does not need curly braces to embed expressions. Though complex expressions need to be surrounded by parentheses. And in Reason most everything is an expression, so there is barely any limit to what you can intermingle in your JSX.
 
@@ -166,3 +166,14 @@ ReactDOMRe.render
 ## Community
 
 [Join us in Discord!](https://discord.gg/reasonml)
+
+## Advanced topics
+
+### Desugaring of uncapitalized JSX
+
+As you plod along you might start wondering how JSX handles the out-of-the-box HTML elements, or uncapitalized components more generally. If you're really curious you might have noticed that `<div foo=bar>child1 child2</div>` desugars `div foo::bar children::[child1, child2] () [@JSX]`. So where's the `div` function? It actually doesn't exist. The `[@JSX]` annotation invokes some even more arcane black magic, a ppx transform that translates that into `ReactDOMRe.createElement "div" props::(ReactDOMRe.props foo::bar ()) [|child1, child2|];`
+
+So why is the middle step even there? I suspect it's in order to decouple the JSX from rehydrate and its ReactDOMRe module. Not sure how you'd avoid the ppx in practice though... [TODO: explain better]
+
+
+### High-order components and other patterns
