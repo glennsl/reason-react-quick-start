@@ -3,6 +3,8 @@
 
 ## Introduction
 
+__rehydrate is still in stealth mode, getting some polish before the official announcement. Please don't publicize this. In the meantime, come join us in [Discord!](https://discord.gg/reasonml)__
+
 The next few sections will gradually introduce you to using rehydrate. We will gradually introduce new concepts and show more complex examples. Once you master these, you should be ready to go!
 
 You can also clone this repo and build the examples yourself, to see the full context and how they transpile to js.
@@ -162,3 +164,5 @@ ReactDOMRe.render
 ## Javascript interop
 
 ## Community
+
+[Join us in Discord!](https://discord.gg/reasonml)
