@@ -1,0 +1,23 @@
+{
+  "name": "rehydrate-quick-start",
+  "version": "0.0.1",
+  "description": "",
+  "main": "quick-start.md",
+  "scripts": {
+    "test": "bsb -make-world",
+    "start": "bsb -make-world -w",
+    "clean": "bsb -clean-world"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bs-platform": "https://github.com/bloomberg/bucklescript.git",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "reason": "https://github.com/facebook/reason.git",
+    "reason-js": "^0.0.15",
+    "rehydrate": "https://github.com/reasonml/rehydrate.git"
+  },
+  "devDependencies": {
+  }}
