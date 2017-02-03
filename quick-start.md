@@ -120,6 +120,8 @@ let createElement ::name ::children =>
 
 #### Updating state
 
+### Events
+
 ### Lifecycle hooks
 
 ## Javascript interop
