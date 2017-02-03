@@ -7,7 +7,7 @@ The next few sections will gradually introduce you to using rehydrate. We will g
 
 You can also clone this repo and build the examples yourself, to see the full context and how they transpile to js.
 
-## Prerequisitets
+## Prerequisites
 
 rehydrate is a library built on React and best used with Reason. You are expected to know the basics of both Reason and React. If you don't feel very confident, we recomend refreshing your knowledge so you can follow along more easily:
 * [An introduction to Reason](https://kennetpostigo.gitbooks.io/an-introduction-to-reason/content/)
