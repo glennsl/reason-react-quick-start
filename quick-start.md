@@ -260,9 +260,18 @@ module Counter = {
 
 Here we get the `updater` function from the "component bag" passed to our `render` function, which we use to wrap our `increment` function before setting it as the button's `onClick` handler. When the button is clicked, `increment` will be called with the latest state (and whatever else is in the "component bag"). It then returns the new state, which will cause the component to rerender with the new state.
 
-Note that `updater` expects a function that returns `option state`, where returning None avoids the rerender because no state has changed.
+Note that `updater` expects a function that returns `option state`, where returning None avoids the rerender because no state has changed. Also beware that `updater` will return a function that only takes unit. If you don't pass it on to a handler and intend to execute it, don't forget to actually do it. There's little syntactic difference between function application and partical application, and the compiler might not warn about it (see https://github.com/reasonml/rehydrate/issues/36). Compare these:
 
-The `setState` function differs from `updater` in that the latter is bound to the state a component has when `updater` gets created, while setState will always give you the fresh state. The downside of `setState` is that it mut return a new state, and will cause a rerender even if nothing changed. This is due to a shortcoming with `setState` in React proper, and hopefully a very temporary problem.
+```reason
+let f : string => unit = fun value =>
+  updater (fun { state } () => Some { ...state, value }) ();
+```
+```reason
+let f : string => unit = fun value =>
+  updater (fun { state } () => Some { ...state, value });
+```
+
+The `setState` function differs from `updater` in that the latter is bound to the state a component has when `updater` gets created, while setState will always give you the fresh state. The downside of `setState` is that it mut return a new state, and will cause a rerender even if nothing changed. This is due to a shortcoming with `setState` in React proper, and hopefully a very temporary problem (see https://github.com/reasonml/rehydrate/issues/37).
 
 ### Lifecycle hooks
 
