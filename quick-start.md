@@ -262,6 +262,8 @@ Here we get the `updater` function from the "component bag" passed to our `rende
 
 Note that `updater` expects a function that returns `option state`, where returning None avoids the rerender because no state has changed.
 
+The `setState` function differs from `updater` in that the latter is bound to the state a component has when `updater` gets created, while setState will always give you the fresh state. The downside of `setState` is that it mut return a new state, and will cause a rerender even if nothing changed. This is due to a shortcoming with `setState` in React proper, and hopefully a very temporary problem.
+
 ### Lifecycle hooks
 
 ### Events
