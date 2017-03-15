@@ -1,5 +1,5 @@
 {
-  "name": "rehydrate-quick-start",
+  "name": "reason-react-quick-start",
   "version": "0.0.1",
   "description": "",
   "main": "quick-start.md",
@@ -16,8 +16,8 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "reason": "https://github.com/facebook/reason.git",
-    "reason-js": "^0.0.15",
-    "rehydrate": "https://github.com/reasonml/rehydrate.git"
+    "reason-js": "^0.0.16",
+    "reason-react": "https://github.com/reasonml/reason-react.git"
   },
   "devDependencies": {
   }}

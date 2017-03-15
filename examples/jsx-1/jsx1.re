@@ -12,7 +12,7 @@ let hello =
   (ReactRe.stringToElement ("Hello, " ^ formatName user));
 
 let header =
-  <h1 role=(formatName user)> /* TODO: role should be title */
+  <h1 title=(formatName user)>
     hello
   </h1>;
 

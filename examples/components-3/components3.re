@@ -1,5 +1,3 @@
-external toLocalTimeString: ReasonJs.Date.t => string = "" [@@bs.send "toLocalTimeString"];
-
 module Clock = {
   module ClockSpec = {
     include ReactRe.Component.Stateful;
@@ -7,17 +5,17 @@ module Clock = {
 
     type props = ();
     type state = {
-      date: ReasonJs.Date.t
+      date: Js.Date.t
     };
 
-    let getInitialState props => {
-      date: ReasonJs.Date.make ()
+    let getInitialState _ => {
+      date: Js.Date.make ()
     };
 
     let render {state} =>
       <div>
         <h1> (ReactRe.stringToElement "Hello, World") </h1>
-        <h2> (ReactRe.stringToElement ("It is " ^ toLocalTimeString state.date)) </h2>
+        <h2> (ReactRe.stringToElement ("It is " ^ Js.Date.toLocaleTimeString state.date)) </h2>
       </div>
   };
 

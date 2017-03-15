@@ -1,33 +1,31 @@
 
-# Rehydrate quick start
+# Reason-React quick start
 
 ## Introduction
 
-__rehydrate is still in stealth mode, getting some polish before the official announcement. Please don't publicize this. In the meantime, come join us in [Discord!](https://discord.gg/reasonml)__
+Reason-React is a pretty thin layer of reason/ocaml bindings to React.
 
-rehydrate is a pretty thin layer of reason/ocaml bindings to React.
-
-The next few sections will gradually introduce you to using rehydrate. We will gradually introduce new concepts and show more complex examples. Once you master these, you should be ready to go!
+The next few sections will gradually introduce you to using Reason-React. We will gradually introduce new concepts and show more complex examples. Once you master these, you should be ready to go!
 
 You can also clone this repo and build the examples yourself, to see the full context and how they transpile to js.
 
 ### Prerequisites and additional resources
 
-rehydrate is a library built on React and BuckleScript and best used with Reason. You are expected to know the basics of both Reason and React. If you don't feel very confident, we recomend refreshing your knowledge so you can follow along more easily:
+Reason-React is a library built on React and BuckleScript and best used with Reason. You are expected to know the basics of both Reason and React. If you don't feel very confident, we recomend refreshing your knowledge so you can follow along more easily:
 * [An introduction to Reason](https://kennetpostigo.gitbooks.io/an-introduction-to-reason/content/)
 * [React Quick Start](https://facebook.github.io/react/docs/hello-world.html)
 
-You are not expected to know much about BuckleScript for the purpose of this guide alone, other than the fact that it somehow, as if by magic, converts OCaml/Reason code to Javascript. But you will eventually want to refer to the BuckleScript documentation, for configuration of `bsb`, js interop and such. And you'll want to refer to the rehydrate documentation for the gritty details:
+You are not expected to know much about BuckleScript for the purpose of this guide alone, other than the fact that it somehow, as if by magic, converts OCaml/Reason code to Javascript. But you will eventually want to refer to the BuckleScript documentation, for configuration of `bsb`, js interop and such. And you'll want to refer to the Reason-React documentation for the gritty details:
 * [BuckleScript User Manual](https://bloomberg.github.io/bucklescript/Manual.html)
-* [rehydrate documentation proper](https://github.com/reasonml/rehydrate/blob/master/documentation.md)
+* [Reason-React documentation proper](https://github.com/reasonml/reason-react/blob/master/documentation.md)
 
 ## Getting started
 
-A good place to start is by cloning and setting up `rehydrate-example`:
+A good place to start is by cloning and setting up `reason-react-example`:
 
 ```sh
-git clone https://github.com/chenglou/rehydrate-example.git
-cd rehydrate-example
+git clone https://github.com/chenglou/reason-react-example.git
+cd reason-react-example
 npm install
 npm start
 ```
@@ -43,8 +41,9 @@ The example project has `bsb` configured to watch the `src` folder, and webpack 
 
 ## A small step for... oh, "hello world"
 
-The smallest rehydrate example looks like this:
+The smallest Reason-React example looks like this:
 
+[//]: # "hello-world1"
 ```reason
 ReactDOMRe.render
   <h1> (ReactRe.stringToElement "Hello, world!") </h1>
@@ -63,6 +62,7 @@ Reason has excellent support for the JSX syntax, but there are some differences 
 
 Reason's JSX does not need curly braces to embed expressions. Though complex expressions need to be surrounded by parentheses. And in Reason most everything is an expression, so there is barely any limit to what you can intermingle in your JSX. Also, you _can_ surround expressions by curly braces if you really want to, you just don't need to. Surrounding something in curly braces anywhere will merely introduce a new lexical scope.
 
+[//]: # "jsx1"
 ```reason
 type user = { firstName: string, lastName: string };
 
@@ -78,7 +78,7 @@ let hello =
   (ReactRe.stringToElement ("Hello, " ^ formatName user));
 
 let header =
-  <h1 role=(formatName user)> /* TODO: role should be title */
+  <h1 title=(formatName user)>
     hello
   </h1>;
 
@@ -92,12 +92,13 @@ ReactDOMRe.render
 
 As with teh babel JSX  transform for JavaScript, Reason's JSX is really just syntax sugar for plain Reason code. And because of this your JSX will typechekd too. If you mistype an attribute the typechecker will give you a nudge, as it also will if you pass a `boolean` to an attribute that expects a `string`.
 
-But this also means `null`s and `string`s or even `list`s and `array`s aren't valid types for expressions embedded in JSX. Components expect their children to be React elements, and so we need to wrap them as elements. Luckily rehydrate provides functions to do exactly that:
+But this also means `null`s and `string`s or even `list`s and `array`s aren't valid types for expressions embedded in JSX. Components expect their children to be React elements, and so we need to wrap them as elements. Luckily Reason-React provides functions to do exactly that:
 
 * `ReactRe.stringToElement` will wrap a string
 * `ReactRe.arrayToElement` will wrap an array of React elements
 * `ReactRe.nullElement` will pretend to be an element for the typechecker, but is really just a null
 
+[//]: # "jsx2"
 ```reason
 let items = [
   "apples",
@@ -134,6 +135,7 @@ ReactDOMRe.render
 
 Components require that we dabble a bit in the black arts. But just a little bit. A basic component looks like this
 
+[//]: # "components1"
 ```reason
 module Welcome = {
   include ReactRe.Component;
@@ -152,7 +154,7 @@ let createElement ::name ::children =>
   wrapProps { name } ::children;
 ```
 
-So we define a module, which isn't and won't be the actual component but it's specification. `include ReactRe.Component` is the bit of black magic that tells rehydrate what kind of component it is, and what it should expect to see defined in it. `ReactRe.Component` is the most basic kind, and requires us to define a `name` a type called `props`, and a `render` function.
+So we define a module, which isn't and won't be the actual component but it's specification. `include ReactRe.Component` is the bit of black magic that tells Reason-React what kind of component it is, and what it should expect to see defined in it. `ReactRe.Component` is the most basic kind, and requires us to define a `name` a type called `props`, and a `render` function.
 * `name` is the component's display name, which is useful for debugging.
 * `props` specifies the type of the component's attributes/properties.
 * `render` is, as you'd expect, the function that's called when the component is to be rendered.
@@ -161,12 +163,13 @@ The actual component is defined by the second piece of black magic: `include Rea
 
 ### The elusive "component bag"
 
-Since idiomatic Reason/OCaml code does not use `this`, rehydrate defines a data structure that's called the "component bag" which fulfills the same role. Which is to avoid having to spcify every damn thing you might want to use, just in case. Therefore many of the functions you define on your components, like the `render` function, will get passed a "component bag". It is a record of the shape `{props, state, updater, refSetter, instanceVars, setState}`, and you'll usually want to destructure the argument directly. If you need access to the state, you just add that like so: `let render { props, state } => ...`
+Since idiomatic Reason/OCaml code does not use `this`, Reason-React defines a data structure that's called the "component bag" which fulfills the same role. Which is to avoid having to spcify every damn thing you might want to use, just in case. Therefore many of the functions you define on your components, like the `render` function, will get passed a "component bag". It is a record of the shape `{props, state, updater, refSetter, instanceVars, setState}`, and you'll usually want to destructure the argument directly. If you need access to the state, you just add that like so: `let render { props, state } => ...`
 
 ### Look, ma, no magic!
 
 As far as Reason's JSX syntax is concerned, a component is nothing more than a module with a createElement function of a certain shape. So if we remove all the magic (and all the convenient functionality) we can define a component like this:
 
+[//]: # "components2 - Part 1"
 ```reason
 module Welcome = {
   let createElement ::name ::children () =>
@@ -176,6 +179,7 @@ module Welcome = {
 
 This is significanlty less code, and for tiny components this is sometimes a convenient trick, but most often you'll want all the magical convenience. Both components can be used like this:
 
+[//]: # "components2 - Part 2"
 ```reason
 ReactDOMRe.render
   <Welcome name="Bob" />
@@ -184,11 +188,10 @@ ReactDOMRe.render
 
 ### Stateful components
 
-With the magic back in, adding local state to a component is as easy telling rehydrate this is a steateful component, what the type of our state is, and what the initial state is:
+With the magic back in, adding local state to a component is as easy telling Reason-React this is a steateful component, what the type of our state is, and what the initial state is:
 
+[//]: # "components3"
 ```reason
-external toLocalTimeString: ReasonJs.Date.t => string = "" [@@bs.send "toLocalTimeString"];
-
 module Clock = {
   module ClockSpec = {
     include ReactRe.Component.Stateful;
@@ -196,17 +199,17 @@ module Clock = {
 
     type props = ();
     type state = {
-      date: ReasonJs.Date.t
+      date: Js.Date.t
     };
 
-    let getInitialState props => {
-      date: ReasonJs.Date.make ()
+    let getInitialState _ => {
+      date: Js.Date.make ()
     };
 
     let render {state} =>
       <div>
         <h1> (ReactRe.stringToElement "Hello, World") </h1>
-        <h2> (ReactRe.stringToElement ("It is " ^ toLocalTimeString state.date)) </h2>
+        <h2> (ReactRe.stringToElement ("It is " ^ Js.Date.toLocaleTimeString state.date)) </h2>
       </div>
   };
 
@@ -229,8 +232,9 @@ There's not much use in state if it doesn't change, though. So let's get to that
 
 #### Updating state
 
-rehydrate does have a setState function, but you shouldn't normally use it! Instead you'll usually use the `updater` function that's passed to you in the component bag. Let's make a counter, where the count increases on each click of a button.
+Reason-React does have a setState function, but you shouldn't normally use it! Instead you'll usually use the `updater` function that's passed to you in the component bag. Let's make a counter, where the count increases on each click of a button.
 
+[//]: # "components3"
 ```reason
 module Counter = {
   include ReactRe.Component.Stateful;
@@ -241,7 +245,7 @@ module Counter = {
     count: int
   };
 
-  let getInitialState props => {
+  let getInitialState _ => {
     count: 0
   };
 
@@ -260,7 +264,7 @@ module Counter = {
 
 Here we get the `updater` function from the "component bag" passed to our `render` function, which we use to wrap our `increment` function before setting it as the button's `onClick` handler. When the button is clicked, `increment` will be called with the latest state (and whatever else is in the "component bag"). It then returns the new state, which will cause the component to rerender with the new state.
 
-Note that `updater` expects a function that returns `option state`, where returning None avoids the rerender because no state has changed. Also beware that `updater` will return a function that only takes unit. If you don't pass it on to a handler and intend to execute it, don't forget to actually do it. There's little syntactic difference between function application and partical application, and the compiler might not warn about it (see https://github.com/reasonml/rehydrate/issues/36). Compare these:
+Note that `updater` expects a function that returns `option state`, where returning None avoids the rerender because no state has changed. Also beware that `updater` will return a function that only takes unit. If you don't pass it on to a handler and intend to execute it, don't forget to actually do it. There's little syntactic difference between function application and partical application, and the compiler might not warn about it (see https://github.com/reasonml/reason-react/issues/36). Compare these:
 
 ```reason
 let f : string => unit = fun value =>
@@ -271,7 +275,7 @@ let f : string => unit = fun value =>
   updater (fun { state } () => Some { ...state, value });
 ```
 
-The `setState` function differs from `updater` in that the latter is bound to the state a component has when `updater` gets created, while setState will always give you the fresh state. The downside of `setState` is that it mut return a new state, and will cause a rerender even if nothing changed. This is due to a shortcoming with `setState` in React proper, and hopefully a very temporary problem (see https://github.com/reasonml/rehydrate/issues/37).
+The `setState` function differs from `updater` in that the latter is bound to the state a component has when `updater` gets created, while setState will always give you the fresh state. The downside of `setState` is that it mut return a new state, and will cause a rerender even if nothing changed. This is due to a shortcoming with `setState` in React proper, and hopefully a very temporary problem (see https://github.com/reasonml/reason-react/issues/37).
 
 ### Lifecycle hooks
 
@@ -289,7 +293,7 @@ We gather around the bonfire on the reasonml discord. [You should come join us!]
 
 As you plod along you might start wondering how JSX handles the out-of-the-box HTML elements, or uncapitalized components more generally. If you're really curious you might have noticed that `<div foo=bar>child1 child2</div>` desugars `div foo::bar children::[child1, child2] () [@JSX]`. So where's the `div` function? It actually doesn't exist. The `[@JSX]` annotation invokes some even more arcane black magic, a ppx transform that translates that into `ReactDOMRe.createElement "div" props::(ReactDOMRe.props foo::bar ()) [|child1, child2|];`
 
-So why is the middle step even there? I suspect it's in order to decouple the JSX from rehydrate and its ReactDOMRe module. Not sure how you'd avoid the ppx in practice though... [TODO: explain better]
+So why is the middle step even there? I suspect it's in order to decouple the JSX from Reason-React and its ReactDOMRe module. Not sure how you'd avoid the ppx in practice though... [TODO: explain better]
 
 
 ### High-order components and other patterns
@@ -299,4 +303,4 @@ So why is the middle step even there? I suspect it's in order to decouple the JS
 Much of the BuckleScript and Reason ecosystem is in a state of flux and is therefore only partially documented, or not documented at all! It can therefore be very useful to look at the source code, or interface files if available, to get a better idea of what's available and how it works. Uhmm, Good Luck!
 
 * [ReasonJs source code](https://github.com/BuckleTypes/reason-js/blob/master/src/reasonJs.re)
-* [ReactRe interface source](https://github.com/reasonml/rehydrate/blob/master/src/reactRe.rei)
+* [ReactRe interface source](https://github.com/reasonml/reason-react/blob/master/src/reactRe.rei)

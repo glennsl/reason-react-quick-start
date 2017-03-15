@@ -9,7 +9,7 @@ module Counter' = {
       count: int
     };
 
-    let getInitialState props => {
+    let getInitialState _ => {
       count: 0
     };
 
