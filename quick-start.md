@@ -11,7 +11,7 @@ You can also clone this repo and build the examples yourself, to see the full co
 
 ### Prerequisites and additional resources
 
-Reason-React is a library built on React and BuckleScript and best used with Reason. You are expected to know the basics of both Reason and React. If you don't feel very confident, we recomend refreshing your knowledge so you can follow along more easily:
+Reason-React is a library built on React and BuckleScript and best used with Reason. You are expected to know the basics of both Reason and React. If you don't feel very confident, we recommend refreshing your knowledge so you can follow along more easily:
 * [An introduction to Reason](https://kennetpostigo.gitbooks.io/an-introduction-to-reason/content/)
 * [React Quick Start](https://facebook.github.io/react/docs/hello-world.html)
 
@@ -90,7 +90,7 @@ ReactDOMRe.render
 
 ### The JSX is typechecked
 
-As with teh babel JSX  transform for JavaScript, Reason's JSX is really just syntax sugar for plain Reason code. And because of this your JSX will typechekd too. If you mistype an attribute the typechecker will give you a nudge, as it also will if you pass a `boolean` to an attribute that expects a `string`.
+As with the babel JSX  transform for JavaScript, Reason's JSX is really just syntax sugar for plain Reason code. And because of this your JSX will typechecked too. If you mistype an attribute the typechecker will give you a nudge, as it also will if you pass a `boolean` to an attribute that expects a `string`.
 
 But this also means `null`s and `string`s or even `list`s and `array`s aren't valid types for expressions embedded in JSX. Components expect their children to be React elements, and so we need to wrap them as elements. Luckily Reason-React provides functions to do exactly that:
 
@@ -163,7 +163,7 @@ The actual component is defined by the second piece of black magic: `include Rea
 
 ### The elusive "component bag"
 
-Since idiomatic Reason/OCaml code does not use `this`, Reason-React defines a data structure that's called the "component bag" which fulfills the same role. Which is to avoid having to spcify every damn thing you might want to use, just in case. Therefore many of the functions you define on your components, like the `render` function, will get passed a "component bag". It is a record of the shape `{props, state, updater, refSetter, instanceVars, setState}`, and you'll usually want to destructure the argument directly. If you need access to the state, you just add that like so: `let render { props, state } => ...`
+Since idiomatic Reason/OCaml code does not use `this`, Reason-React defines a data structure that's called the "component bag" which fulfills the same role. Which is to avoid having to specify every damn thing you might want to use, just in case. Therefore many of the functions you define on your components, like the `render` function, will get passed a "component bag". It is a record of the shape `{props, state, updater, refSetter, instanceVars, setState}`, and you'll usually want to destructure the argument directly. If you need access to the state, you just add that like so: `let render { props, state } => ...`
 
 ### Look, ma, no magic!
 
@@ -188,7 +188,7 @@ ReactDOMRe.render
 
 ### Stateful components
 
-With the magic back in, adding local state to a component is as easy telling Reason-React this is a steateful component, what the type of our state is, and what the initial state is:
+With the magic back in, adding local state to a component is as easy telling Reason-React this is a stateful component, what the type of our state is, and what the initial state is:
 
 [//]: # "components3"
 ```reason
@@ -226,7 +226,7 @@ let render () =>
 ReasonJs.setInterval render 1000;
 ```
 
-Compared to our earlier component, not much fundamental has changed. `include ReactRe.Component` is now `include ReactRe.Component.Stateful`, we've defined a `state` type and a `getInitialState` function which takes `props` as its argument and returns the inital state.
+Compared to our earlier component, not much fundamental has changed. `include ReactRe.Component` is now `include ReactRe.Component.Stateful`, we've defined a `state` type and a `getInitialState` function which takes `props` as its argument and returns the initial state.
 
 There's not much use in state if it doesn't change, though. So let's get to that.
 
@@ -264,7 +264,7 @@ module Counter = {
 
 Here we get the `updater` function from the "component bag" passed to our `render` function, which we use to wrap our `increment` function before setting it as the button's `onClick` handler. When the button is clicked, `increment` will be called with the latest state (and whatever else is in the "component bag"). It then returns the new state, which will cause the component to rerender with the new state.
 
-Note that `updater` expects a function that returns `option state`, where returning None avoids the rerender because no state has changed. Also beware that `updater` will return a function that only takes unit. If you don't pass it on to a handler and intend to execute it, don't forget to actually do it. There's little syntactic difference between function application and partical application, and the compiler might not warn about it (see https://github.com/reasonml/reason-react/issues/36). Compare these:
+Note that `updater` expects a function that returns `option state`, where returning None avoids the rerender because no state has changed. Also beware that `updater` will return a function that only takes unit. If you don't pass it on to a handler and intend to execute it, don't forget to actually do it. There's little syntactic difference between function application and partial application, and the compiler might not warn about it (see https://github.com/reasonml/reason-react/issues/36). Compare these:
 
 ```reason
 let f : string => unit = fun value =>
@@ -275,7 +275,7 @@ let f : string => unit = fun value =>
   updater (fun { state } () => Some { ...state, value });
 ```
 
-The `setState` function differs from `updater` in that the latter is bound to the state a component has when `updater` gets created, while setState will always give you the fresh state. The downside of `setState` is that it mut return a new state, and will cause a rerender even if nothing changed. This is due to a shortcoming with `setState` in React proper, and hopefully a very temporary problem (see https://github.com/reasonml/reason-react/issues/37).
+The `setState` function differs from `updater` in that the latter is bound to the state a component has when `updater` gets created, while setState will always give you the fresh state. The downside of `setState` is that it must return a new state, and will cause a rerender even if nothing changed. This is due to a shortcoming with `setState` in React proper, and hopefully a very temporary problem (see https://github.com/reasonml/reason-react/issues/37).
 
 ### Lifecycle hooks
 
