@@ -3,7 +3,7 @@
 
 ## Introduction
 
-Reason-React is a pretty thin layer of reason/ocaml bindings to React.
+Reason-React is a pretty thin layer of reason/oCaml bindings to React.
 
 The next few sections will gradually introduce you to using Reason-React. We will gradually introduce new concepts and show more complex examples. Once you master these, you should be ready to go!
 
@@ -35,7 +35,7 @@ Then in a different terminal do:
 npm run build
 ```
 
-`npm start` will run the bucklescript build system (`bsb`) in watch mode. `npm run build` runs `webpack` in watch mode, which will pick up the artifacts produced by `bsb` and bundle them together with its dependencies to produce a single javasrcipt file (for each configured target).
+`npm start` will run the bucklescript build system (`bsb`) in watch mode. `npm run build` runs `webpack` in watch mode, which will pick up the artifacts produced by `bsb` and bundle them together with its dependencies to produce a single javascript file (for each configured target).
 
 The example project has `bsb` configured to watch the `src` folder, and webpack configured to pick up the artifact produced by bsb from `index.re`, and output `index.js` in the `src` folder alongside `index.html`, which can then be used to run it in a web browser. To start with you will most likely want to use the existing configuration with `index.re` as your entrypoint. You can still split your code into multiple source files. As long as they are alongside and used by `index.re` they'll get picked up by `bsb` and `webpack`.
 
@@ -60,7 +60,7 @@ Reason has excellent support for the JSX syntax, but there are some differences 
 
 ### No curly braces around embedded expressions
 
-Reason's JSX does not need curly braces to embed expressions. Though complex expressions need to be surrounded by parentheses. And in Reason most everything is an expression, so there is barely any limit to what you can intermingle in your JSX. Also, you _can_ surround expressions by curly braces if you really want to, you just don't need to. Surrounding something in curly braces anywhere will merely introduce a new lexical scope.
+Reason's JSX does not need curly braces to embed expressions. Though complex expressions need to be surrounded by parentheses. And in Reason, most everything is an expression, so there is barely any limit to what you can intermingle in your JSX. Also, you _can_ surround expressions by curly braces if you really want to, you just don't need to. Surrounding something in curly braces anywhere will merely introduce a new lexical scope.
 
 [//]: # "jsx1"
 ```reason
@@ -90,7 +90,7 @@ ReactDOMRe.render
 
 ### The JSX is typechecked
 
-As with the babel JSX  transform for JavaScript, Reason's JSX is really just syntax sugar for plain Reason code. And because of this your JSX will typechecked too. If you mistype an attribute the typechecker will give you a nudge, as it also will if you pass a `boolean` to an attribute that expects a `string`.
+As with the babel JSX  transforms for JavaScript, Reason's JSX is really just syntax sugar for plain Reason code. And because of this, your JSX will typechecked too. If you mistype an attribute, the typechecker will give you a nudge, as it also will if you pass a `boolean` to an attribute that expects a `string`.
 
 But this also means `null`s and `string`s or even `list`s and `array`s aren't valid types for expressions embedded in JSX. Components expect their children to be React elements, and so we need to wrap them as elements. Luckily Reason-React provides functions to do exactly that:
 
@@ -154,7 +154,7 @@ let createElement ::name ::children =>
   wrapProps { name } ::children;
 ```
 
-So we define a module, which isn't and won't be the actual component but it's specification. `include ReactRe.Component` is the bit of black magic that tells Reason-React what kind of component it is, and what it should expect to see defined in it. `ReactRe.Component` is the most basic kind, and requires us to define a `name` a type called `props`, and a `render` function.
+So we define a module, which isn't and won't be the actual component but its specification. `include ReactRe.Component` is the bit of black magic that tells Reason-React what kind of component it is, and what it should expect to see defined in it. `ReactRe.Component` is the most basic kind, and requires us to define a `name` a type called `props`, and a `render` function.
 * `name` is the component's display name, which is useful for debugging.
 * `props` specifies the type of the component's attributes/properties.
 * `render` is, as you'd expect, the function that's called when the component is to be rendered.
@@ -177,7 +177,7 @@ module Welcome = {
 };
 ```
 
-This is significanlty less code, and for tiny components this is sometimes a convenient trick, but most often you'll want all the magical convenience. Both components can be used like this:
+This is significantly less code, and for tiny components, this is sometimes a convenient trick, but most often you'll want all the magical convenience. Both components can be used like this:
 
 [//]: # "components2 - Part 2"
 ```reason
@@ -188,7 +188,7 @@ ReactDOMRe.render
 
 ### Stateful components
 
-With the magic back in, adding local state to a component is as easy telling Reason-React this is a stateful component, what the type of our state is, and what the initial state is:
+With the magic back in, adding a local state to a component is as easy telling Reason-React this is a stateful component, what the type of our state is, and what the initial state is:
 
 [//]: # "components3"
 ```reason
@@ -228,11 +228,11 @@ ReasonJs.setInterval render 1000;
 
 Compared to our earlier component, not much fundamental has changed. `include ReactRe.Component` is now `include ReactRe.Component.Stateful`, we've defined a `state` type and a `getInitialState` function which takes `props` as its argument and returns the initial state.
 
-There's not much use in state if it doesn't change, though. So let's get to that.
+There's not much use in the state if it doesn't change, though. So let's get to that.
 
 #### Updating state
 
-Reason-React does have a setState function, but you shouldn't normally use it! Instead you'll usually use the `updater` function that's passed to you in the component bag. Let's make a counter, where the count increases on each click of a button.
+Reason-React does have a setState function, but you shouldn't normally use it! Instead, you'll usually use the `updater` function that's passed to you in the component bag. Let's make a counter, where the count increases on each click of a button.
 
 [//]: # "components3"
 ```reason
@@ -264,7 +264,7 @@ module Counter = {
 
 Here we get the `updater` function from the "component bag" passed to our `render` function, which we use to wrap our `increment` function before setting it as the button's `onClick` handler. When the button is clicked, `increment` will be called with the latest state (and whatever else is in the "component bag"). It then returns the new state, which will cause the component to rerender with the new state.
 
-Note that `updater` expects a function that returns `option state`, where returning None avoids the rerender because no state has changed. Also beware that `updater` will return a function that only takes unit. If you don't pass it on to a handler and intend to execute it, don't forget to actually do it. There's little syntactic difference between function application and partial application, and the compiler might not warn about it (see https://github.com/reasonml/reason-react/issues/36). Compare these:
+Note that `updater` expects a function that returns `option state`, where returning None avoids the rerender because no state has changed. Also, beware that `updater` will return a function that only takes the unit. If you don't pass it on to a handler and intend to execute it, don't forget actually to do it. There's a little syntactic difference between function application and partial application, and the compiler might not warn about it (see https://github.com/reasonml/reason-react/issues/36). Compare these:
 
 ```reason
 let f : string => unit = fun value =>
@@ -293,14 +293,14 @@ We gather around the bonfire on the reasonml discord. [You should come join us!]
 
 As you plod along you might start wondering how JSX handles the out-of-the-box HTML elements, or uncapitalized components more generally. If you're really curious you might have noticed that `<div foo=bar>child1 child2</div>` desugars `div foo::bar children::[child1, child2] () [@JSX]`. So where's the `div` function? It actually doesn't exist. The `[@JSX]` annotation invokes some even more arcane black magic, a ppx transform that translates that into `ReactDOMRe.createElement "div" props::(ReactDOMRe.props foo::bar ()) [|child1, child2|];`
 
-So why is the middle step even there? I suspect it's in order to decouple the JSX from Reason-React and its ReactDOMRe module. Not sure how you'd avoid the ppx in practice though... [TODO: explain better]
+So why is the middle step even there? I suspect it's in order to decouple the JSX from Reason-React and its ReactDOMRe module. Not sure how you'd avoid the ppx in practice, though... [TODO: explain better]
 
 
 ### High-order components and other patterns
 
 ## Appendix: Esoteric but useful resources
 
-Much of the BuckleScript and Reason ecosystem is in a state of flux and is therefore only partially documented, or not documented at all! It can therefore be very useful to look at the source code, or interface files if available, to get a better idea of what's available and how it works. Uhmm, Good Luck!
+Much of the BuckleScript and Reason ecosystem is in a state of flux and is therefore only partially documented, or not documented at all! It can, therefore, be very useful to look at the source code, or interface files if available, to get a better idea of what's available and how it works. Uhmm, Good Luck!
 
 * [ReasonJs source code](https://github.com/BuckleTypes/reason-js/blob/master/src/reasonJs.re)
 * [ReactRe interface source](https://github.com/reasonml/reason-react/blob/master/src/reactRe.rei)
