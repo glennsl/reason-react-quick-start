@@ -3,7 +3,7 @@
 
 ## Introduction
 
-Reason-React is a pretty thin layer of reason/oCaml bindings to React.
+Reason-React is a pretty thin layer of reason/OCaml bindings to React.
 
 The next few sections will gradually introduce you to using Reason-React. We will gradually introduce new concepts and show more complex examples. Once you master these, you should be ready to go!
 
@@ -35,7 +35,7 @@ Then in a different terminal do:
 npm run build
 ```
 
-`npm start` will run the bucklescript build system (`bsb`) in watch mode. `npm run build` runs `webpack` in watch mode, which will pick up the artifacts produced by `bsb` and bundle them together with its dependencies to produce a single javascript file (for each configured target).
+`npm start` will run the bucklescript build system (`bsb`) in watch mode. `npm run build` runs `webpack` in watch mode, which will pick up the artifacts produced by `bsb` and bundle them together with its dependencies to produce a single JavaScript file (for each configured target).
 
 The example project has `bsb` configured to watch the `src` folder, and webpack configured to pick up the artifact produced by bsb from `index.re`, and output `index.js` in the `src` folder alongside `index.html`, which can then be used to run it in a web browser. To start with you will most likely want to use the existing configuration with `index.re` as your entrypoint. You can still split your code into multiple source files. As long as they are alongside and used by `index.re` they'll get picked up by `bsb` and `webpack`.
 
