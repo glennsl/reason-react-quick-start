@@ -147,7 +147,7 @@ module Welcome = {
 
 include ReactRe.CreateComponent Welcome;
 let createElement ::name ::children =>
-  wrapProps { name } ::children;
+  wrapProps { name: name } ::children;
 ```
 
 So we define a module, which isn't and won't be the actual component but its specification. `include ReactRe.Component` is the bit of black magic that tells Reason-React what kind of component it is, and what it should expect to see defined in it. `ReactRe.Component` is the most basic kind, and requires us to define a `name` a type called `props`, and a `render` function.
