@@ -45,9 +45,9 @@ The smallest Reason-React example looks like this:
 
 [//]: # "hello-world1"
 ```reason
-ReactDOMRe.render
+ReactDOMRe.renderToElementWithId
   <h1> (ReactRe.stringToElement "Hello, world!") </h1>
-  (ReasonJs.Document.getElementById "root");
+  "root";
 ```
 
 Not too scary is it! This will render a header saying "Hello World" on the page. Ok, thnx, let's move on...
@@ -82,9 +82,7 @@ let header =
     hello
   </h1>;
 
-ReactDOMRe.render
-  header
-  (ReasonJs.Document.getElementById "root");
+ReactDOMRe.renderToElementWithId header "root";
 ```
 
 
@@ -126,9 +124,7 @@ let list =
     (items |> List.map item |> Array.of_list |> ReactRe.arrayToElement)
   </ul>;
 
-ReactDOMRe.render
-  list
-  (ReasonJs.Document.getElementById "root");
+ReactDOMRe.renderToElementWithId list "root";
 ```
 
 ## Components
@@ -145,7 +141,7 @@ module Welcome = {
     name: string
   };
 
-  let render { props } =>
+  let render {props} =>
     <h1> (ReactRe.stringToElement ("Hello, " ^ props.name)) </h1>;
 };
 
@@ -181,9 +177,7 @@ This is significantly less code, and for tiny components, this is sometimes a co
 
 [//]: # "components2 - Part 2"
 ```reason
-ReactDOMRe.render
-  <Welcome name="Bob" />
-  (ReasonJs.Document.getElementById "root");
+ReactDOMRe.renderToElementWithId <Welcome name="Bob" /> "root";
 ```
 
 ### Stateful components
@@ -219,11 +213,9 @@ module Clock = {
 };
 
 let render () =>
-  ReactDOMRe.render
-    <Clock />
-    (ReasonJs.Document.getElementById "root");
+  ReactDOMRe.renderToElementWithId <Clock /> "root";
 
-ReasonJs.setInterval render 1000;
+Js.Global.setInterval render 1000;
 ```
 
 Compared to our earlier component, not much fundamental has changed. `include ReactRe.Component` is now `include ReactRe.Component.Stateful`, we've defined a `state` type and a `getInitialState` function which takes `props` as its argument and returns the initial state.
@@ -234,7 +226,7 @@ There's not much use in the state if it doesn't change, though. So let's get to 
 
 Reason-React does have a setState function, but you shouldn't normally use it! Instead, you'll usually use the `updater` function that's passed to you in the component bag. Let's make a counter, where the count increases on each click of a button.
 
-[//]: # "components3"
+[//]: # "components4"
 ```reason
 module Counter = {
   include ReactRe.Component.Stateful;

@@ -31,6 +31,4 @@ module Counter' = {
     wrapProps () ::children;
 };
 
-ReactDOMRe.render
-  <Counter' />
-  (ReasonJs.Document.getElementById "root");
+ReactDOMRe.renderToElementWithId <Counter' /> "root";

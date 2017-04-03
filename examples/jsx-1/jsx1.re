@@ -16,6 +16,4 @@ let header =
     hello
   </h1>;
 
-ReactDOMRe.render
-  header
-  (ReasonJs.Document.getElementById "root");
+ReactDOMRe.renderToElementWithId header "root";

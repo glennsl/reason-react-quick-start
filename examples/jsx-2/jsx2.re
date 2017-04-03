@@ -24,6 +24,4 @@ let list =
     (items |> List.map item |> Array.of_list |> ReactRe.arrayToElement)
   </ul>;
 
-ReactDOMRe.render
-  list
-  (ReasonJs.Document.getElementById "root");
+ReactDOMRe.renderToElementWithId list "root";

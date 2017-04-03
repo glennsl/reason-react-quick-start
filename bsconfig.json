@@ -4,12 +4,8 @@
   an issue! */
 {
   "name" : "reason-react-quick-start",
-  "version": "0.0.0",
-  "ppx-flags": ["reason/reactjs_jsx_ppx.native"],
-  "bsc-flags": ["-w", "-40"],
-  "refmt": "reason/refmt_impl.native",
-  "generate-merlin": true,
-  "bs-dependencies": ["reason-react", "reason-js"],
+  "reason" : { "react-jsx" : true},
+  "bs-dependencies": ["reason-react"],
   "sources": [
     {
       "dir": "examples",

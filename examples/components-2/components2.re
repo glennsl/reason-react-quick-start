@@ -5,6 +5,4 @@ module Welcome = {
 };
 
 /* Part 2 */
-ReactDOMRe.render
-  <Welcome name="Bob" />
-  (ReasonJs.Document.getElementById "root");
+ReactDOMRe.renderToElementWithId <Welcome name="Bob" /> "root";

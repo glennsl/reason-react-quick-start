@@ -25,8 +25,6 @@ module Clock = {
 };
 
 let render () =>
-  ReactDOMRe.render
-    <Clock />
-    (ReasonJs.Document.getElementById "root");
+  ReactDOMRe.renderToElementWithId <Clock /> "root";
 
-ReasonJs.setInterval render 1000;
+Js.Global.setInterval render 1000;

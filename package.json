@@ -12,12 +12,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bs-platform": "https://github.com/bloomberg/bucklescript.git",
+    "bs-platform": "bloomberg/bucklescript",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "reason": "https://github.com/facebook/reason.git",
-    "reason-js": "^0.0.16",
-    "reason-react": "https://github.com/reasonml/reason-react.git"
+    "reason-react": "reasonml/reason-react"
   },
   "devDependencies": {
   }}
