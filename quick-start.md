@@ -88,7 +88,7 @@ ReactDOMRe.renderToElementWithId header "root";
 
 ### The JSX is typechecked
 
-As with the babel JSX  transforms for JavaScript, Reason's JSX is really just syntax sugar for plain Reason code. And because of this, your JSX will typechecked too. If you mistype an attribute, the typechecker will give you a nudge, as it also will if you pass a `boolean` to an attribute that expects a `string`.
+As with the babel JSX  transforms for JavaScript, Reason's JSX is really just syntax sugar for plain Reason code. And because of this, your JSX will be typechecked too. If you mistype an attribute, the typechecker will give you a nudge, as it also will if you pass a `boolean` to an attribute that expects a `string`.
 
 But this also means `null`s and `string`s or even `list`s and `array`s aren't valid types for expressions embedded in JSX. Components expect their children to be React elements, and so we need to wrap them as elements. Luckily Reason-React provides functions to do exactly that:
 
