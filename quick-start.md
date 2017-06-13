@@ -1,6 +1,8 @@
 
 # Reason-React quick start
 
+**This guide is OBSOLETE, seeing as the reason-react API has been significantly revamped. Please refer to the [official documentation](https://reasonml.github.io/reason-react/)**
+
 ## Introduction
 
 Reason-React is a pretty thin layer of reason/OCaml bindings to React.
