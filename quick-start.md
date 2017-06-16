@@ -18,7 +18,7 @@ Reason-React is a library built on React and BuckleScript and best used with Rea
 * [React Quick Start](https://facebook.github.io/react/docs/hello-world.html)
 
 You are not expected to know much about BuckleScript for the purpose of this guide alone, other than the fact that it somehow, as if by magic, converts OCaml/Reason code to Javascript. But you will eventually want to refer to the BuckleScript documentation, for configuration of `bsb`, js interop and such. And you'll want to refer to the Reason-React documentation for the gritty details:
-* [BuckleScript User Manual](https://bloomberg.github.io/bucklescript/Manual.html)
+* [BuckleScript User Manual](https://bucklescript.github.io/bucklescript/Manual.html)
 * [Reason-React documentation proper](https://github.com/reasonml/reason-react/blob/master/documentation.md)
 
 ## Getting started
